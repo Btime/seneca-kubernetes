@@ -5,7 +5,7 @@ const find_ip = require('get-ip-address')
 const get_credentials = require('kubernetes-pod-auth')
 
 
-function get_pods (namespace, k8s_url, done) {
+function get_pods (opts, done) {
   get_credentials(function (err, ca, token) {
 
     if (err) {
@@ -13,7 +13,7 @@ function get_pods (namespace, k8s_url, done) {
     }
 
     const options = {
-      url: `https://${options.k8s_url}/api/v1/namespaces/{options.namespace}/pods`,
+      url: `https://${opts.k8s_url}/api/v1/namespaces/{opts.namespace}/pods`,
       ca: ca,
       headers: {
         "Authorization": "Bearer " + token
