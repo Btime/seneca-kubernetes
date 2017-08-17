@@ -6,6 +6,7 @@ const get_credentials = require('kubernetes-pod-auth')
 
 
 function get_pods (opts, done) {
+  opts.log('seneca-kubernetes - get_pods')
   get_credentials(function (err, ca, token) {
 
     if (err) {
@@ -19,15 +20,16 @@ function get_pods (opts, done) {
         "Authorization": "Bearer " + token
       }
     }
+    opts.log('seneca-kubernetes - options', options)
 
     request.get(options, function (err, res, body) {
-
       if (err) {
         return done(err)
       }
 
       body = JSON.parse(body)
-
+      opts.log('seneca-kubernetes - response', body)
+      
       const pods = body.items.map(function (item) {
         return {
           status: item.status.phase,
@@ -47,15 +49,19 @@ function kubernetes_plugin (options) {
 
   const opts = Object.assign({}, options, {
     k8s_url: 'kubernetes',
-    namespace: 'default'
+    namespace: 'default',
+    log: function(){}
   })
 
   this.add('init:kubernetes', function (args, done) {
-
+    opts.log('seneca-kubernetes init')
     get_pods(options, function got_pods (err, pods) {
       if (err) {
+        opts.log('seneca-kubernetes - err', err)
         return done(err)
       }
+
+      opts.log('seneca-kubernetes - pods length', pods.length)
 
       seneca.options().plugin.kubernetes = {
         myip: find_ip(),
