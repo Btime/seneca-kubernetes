@@ -6,7 +6,6 @@ const get_credentials = require('kubernetes-pod-auth')
 
 
 function get_pods (opts, done) {
-  opts.log('seneca-kubernetes - get_pods')
   get_credentials(function (err, ca, token) {
 
     if (err) {
@@ -54,8 +53,7 @@ function kubernetes_plugin (options) {
   })
 
   this.add('init:kubernetes', function (args, done) {
-    opts.log('seneca-kubernetes init')
-    get_pods(options, function got_pods (err, pods) {
+    get_pods(opts, function got_pods (err, pods) {
       if (err) {
         opts.log('seneca-kubernetes - err', err)
         return done(err)
