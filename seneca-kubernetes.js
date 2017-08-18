@@ -46,11 +46,11 @@ function get_pods (opts, done) {
 function kubernetes_plugin (options) {
   const seneca = this
 
-  const opts = Object.assign({}, options, {
+  const opts = Object.assign({}, {
     k8s_url: 'kubernetes',
     namespace: 'default',
     log: function(){}
-  })
+  }, options)
 
   this.add('init:kubernetes', function (args, done) {
     get_pods(opts, function got_pods (err, pods) {
