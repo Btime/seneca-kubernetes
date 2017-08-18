@@ -14,7 +14,7 @@ function get_pods (opts, done) {
     }
 
     const options = {
-      url: `https://${opts.k8s_url}/api/v1/namespaces/{opts.namespace}/pods`,
+      url: `https://${opts.k8s_url}/api/v1/namespaces/${opts.namespace}/pods`,
       ca: ca,
       headers: {
         "Authorization": "Bearer " + token
